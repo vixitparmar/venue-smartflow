@@ -27,7 +27,7 @@ export const Topbar = () => {
       <div className="flex items-center gap-6">
         <button 
           onClick={toggleSidebar}
-          className="p-2 hover:bg-white/5 rounded-lg text-slate-400 md:hidden"
+          className="p-2 hover:bg-white/5 rounded-lg text-slate-400"
         >
           {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>

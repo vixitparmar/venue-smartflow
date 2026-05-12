@@ -30,6 +30,7 @@ function App() {
       case 'routing': return <Navigation />;
       case 'surge': return <ControlRoom />;
       case 'vendors': return <Vendors />;
+      case 'gtm': return <Vendors />;
       case 'analytics': return <AnalyticsPanels />;
       case 'facilities': return <Facilities />;
       default: return <Dashboard />;
@@ -49,14 +50,14 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={toggleSidebar}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+          // className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40 md:hidden cursor-pointer pointer-events-auto"
           />
         )}
       </AnimatePresence>
 
       <div className="relative z-10 flex w-full h-full">
         <Sidebar />
-        
+
         <main className={twMerge(
           "flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-500 ease-in-out",
           isSidebarOpen ? "md:ml-[280px]" : "md:ml-[80px]"

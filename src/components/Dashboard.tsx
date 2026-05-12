@@ -326,14 +326,14 @@ export const Dashboard: React.FC = () => {
     <div className="min-h-screen space-y-6 transition-all duration-300 bg-dashboard-gradient pb-32">
       
       {/* Top Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MatchIntelligence />
         <TopPerformers />
         <BrainStatus />
       </div>
 
       {/* Middle Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ZoneDensity />
         <div className="lg:col-span-2 widget-container relative bg-transparent overflow-hidden">
            <Stadium3D />
@@ -362,7 +362,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="flex flex-col gap-6 lg:col-span-1">
           <SmartRoutingHub />
           <VendorIntelligence />
@@ -374,7 +374,10 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* System Log Footer */}
-      <div className="fixed bottom-0 left-0 right-0 h-10 bg-[#05070a] border-t border-white/5 flex items-center justify-between px-6 z-50">
+      <div className={twMerge(
+        "fixed bottom-0 right-0 h-10 bg-[#05070a]/90 backdrop-blur-md border-t border-white/5 flex items-center justify-between px-6 z-20 transition-all duration-500",
+        isSidebarOpen ? "left-0 md:left-[280px]" : "left-0 md:left-[80px]"
+      )}>
         <div className="flex items-center gap-6">
           <span className="text-[9px] font-black text-indigo-500 tracking-widest uppercase">SYSTEM LOG</span>
           <div className="flex items-center gap-8 overflow-hidden whitespace-nowrap">

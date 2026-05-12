@@ -9,13 +9,13 @@ export const CrowdIntelligence: React.FC = () => {
    const [selectedSector, setSelectedSector] = useState<any>(null);
 
    const getIntensityColor = (density: number) => {
-      if (density < 40) return 'bg-emerald-100 text-emerald-700';
-      if (density < 75) return 'bg-amber-100 text-amber-700';
-      return 'bg-rose-100 text-rose-700';
+      if (density < 40) return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      if (density < 75) return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
    };
 
    return (
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 lg:gap-8 pb-20">
          <ZoneAnalyticsModal
             isOpen={!!selectedSector}
             onClose={() => setSelectedSector(null)}
@@ -26,18 +26,18 @@ export const CrowdIntelligence: React.FC = () => {
          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="xl:col-span-3 p-8 lg:p-10"
+            className="xl:col-span-3 space-y-8"
          >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                <div>
-                  <h3 className="text-2xl font-bold tracking-tight text-slate-900 uppercase">Zone Density Heatmap</h3>
-                  <p className="text-slate-500 text-xs font-medium mt-1">Live Stadium Metrics • {totalCrowd.toLocaleString()} Active Attendees</p>
+                  <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none">Zone Intelligence</h2>
+                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Live Heatmap • {totalCrowd.toLocaleString()} Active Attendees</p>
                </div>
                {surgeProtocolActive && (
                   <motion.div
-                     animate={{ scale: [1, 1.05, 1] }}
+                     animate={{ scale: [1, 1.05, 1], backgroundColor: ['rgba(244,63,94,0.1)', 'rgba(244,63,94,0.2)', 'rgba(244,63,94,0.1)'] }}
                      transition={{ repeat: Infinity, duration: 2 }}
-                     className="bg-rose-50 text-rose-600 border border-rose-100 px-4 py-2 rounded-2xl text-[11px] font-bold uppercase flex items-center gap-2 shadow-sm"
+                     className="text-rose-400 border border-rose-500/30 px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase flex items-center gap-2 shadow-[0_0_20px_rgba(244,63,94,0.1)]"
                   >
                      <AlertTriangle size={14} /> Surge Intelligence Active
                   </motion.div>
@@ -45,7 +45,7 @@ export const CrowdIntelligence: React.FC = () => {
             </div>
 
             {/* Mock Stadium Grid Representation */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                {sectors.map((sector) => (
                   <motion.div
                      key={sector.id}
@@ -53,12 +53,15 @@ export const CrowdIntelligence: React.FC = () => {
                      whileHover={{ y: -4 }}
                      onClick={() => setSelectedSector(sector)}
                   >
-                     <div className={`aspect-[16/10] w-full rounded-3xl ${getIntensityColor(sector.density).split(' ')[0]} transition-all duration-300 border border-white shadow-sm flex flex-col p-5`} >
-                        <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">{sector.name}</span>
-                        <span className={`text-3xl font-black ${getIntensityColor(sector.density).split(' ')[1]}`}>{(sector.density).toFixed(1)}%</span>
+                     <div className={`aspect-[16/10] w-full rounded-3xl bg-[#05070a]/50 backdrop-blur-md border ${getIntensityColor(sector.density).split(' ').pop()} transition-all duration-300 flex flex-col p-6`} >
+                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{sector.name}</span>
+                        <div className="flex items-end gap-2">
+                           <span className={`text-3xl font-black ${getIntensityColor(sector.density).split(' ')[1]}`}>{(sector.density).toFixed(1)}%</span>
+                           <span className="text-[10px] font-bold text-slate-600 mb-1.5 uppercase">Capacity</span>
+                        </div>
                         
                         <div className="mt-auto">
-                           <div className="w-full h-1.5 bg-white/50 rounded-full overflow-hidden">
+                           <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                               <motion.div
                                  initial={{ width: 0 }}
                                  animate={{ width: `${sector.density}%` }}
@@ -69,68 +72,56 @@ export const CrowdIntelligence: React.FC = () => {
                      </div>
                      {/* Micro Interaction: Ping on high density */}
                      {sector.density > 80 && (
-                        <div className="absolute top-3 right-3 flex h-3 w-3">
+                        <div className="absolute top-4 right-4 flex h-3 w-3">
                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                           <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-500 border-2 border-white"></span>
+                           <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-500 border-2 border-[#05070a]"></span>
                         </div>
                      )}
                   </motion.div>
                ))}
             </div>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-               <div className="flex items-center gap-5 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-card transition-all group">
-                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
-                     <Wind size={24} />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               {[
+                  { icon: Wind, label: 'Fan Movement', value: 'East towards Food Courts', color: 'indigo' },
+                  { icon: Zap, label: 'Predicted Exit Surge', value: 'Expected after 18th Over', color: 'amber' },
+                  { icon: Users, label: 'Avg Queue Time', value: `${avgWaitTime}m (Peak Gate B)`, color: 'emerald' },
+               ].map((stat, i) => (
+                  <div key={i} className="flex items-center gap-5 p-6 rounded-3xl bg-[#05070a]/50 backdrop-blur-md border border-white/5 hover:bg-white/5 transition-all group">
+                     <div className={`w-12 h-12 rounded-2xl bg-${stat.color}-500/10 border border-${stat.color}-500/20 flex items-center justify-center text-${stat.color}-400 group-hover:scale-110 transition-transform`}>
+                        <stat.icon size={22} />
+                     </div>
+                     <div>
+                        <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest leading-none mb-1.5">{stat.label}</p>
+                        <p className="text-sm font-bold text-white tracking-tight">{stat.value}</p>
+                     </div>
                   </div>
-                  <div>
-                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest leading-none mb-1">Fan Movement</p>
-                     <p className="text-sm font-bold text-slate-700">East towards Food Courts</p>
-                  </div>
-               </div>
-               <div className="flex items-center gap-5 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-card transition-all group">
-                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
-                     <Zap size={24} />
-                  </div>
-                  <div>
-                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest leading-none mb-1">Predicted Exit Surge</p>
-                     <p className="text-sm font-bold text-slate-700">Expected after 18th Over</p>
-                  </div>
-               </div>
-               <div className="flex items-center gap-5 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-card transition-all group">
-                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
-                     <Users size={24} />
-                  </div>
-                  <div>
-                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest leading-none mb-1">Avg Queue Time</p>
-                     <p className="text-sm font-bold text-slate-700">{avgWaitTime}m (Peak Gate B)</p>
-                  </div>
-               </div>
+               ))}
             </div>
          </motion.div>
 
          {/* Stats Summary Sidebar for Crowd */}
-         <div className="p-8 lg:p-10 bg-slate-50/50 border-l border-slate-100 space-y-10">
+         <div className="space-y-6">
             <motion.div
                initial={{ opacity: 0, x: 20 }}
                animate={{ opacity: 1, x: 0 }}
                className="space-y-4"
             >
-               <h4 className="text-slate-400 font-black uppercase text-[10px] tracking-widest">AI AGENT MODULE</h4>
-               <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-sm">
+               <h4 className="text-slate-500 font-black uppercase text-[10px] tracking-widest">AI AGENT MODULE</h4>
+               <div className="p-6 bg-[#05070a]/50 backdrop-blur-md rounded-3xl border border-white/5">
                   <div className="flex items-center justify-between mb-4">
-                     <span className="text-sm text-slate-900 font-bold">{autoMode ? 'Autonomous Control' : 'Manual Override'}</span>
+                     <span className="text-sm text-white font-bold">{autoMode ? 'Autonomous' : 'Manual'}</span>
                      <button
                         onClick={() => useStore.getState().toggleAutoMode()}
-                        className={`w-12 h-6 rounded-full p-1 transition-all ${autoMode ? 'bg-indigo-600' : 'bg-slate-200'}`}
+                        className={`w-12 h-6 rounded-full p-1 transition-all ${autoMode ? 'bg-indigo-600' : 'bg-slate-700'}`}
                      >
                         <motion.div
                            animate={{ x: autoMode ? 24 : 0 }}
-                           className="w-4 h-4 bg-white rounded-full shadow-md"
+                           className="w-4 h-4 bg-white rounded-full shadow-lg shadow-black/50"
                         />
                      </button>
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed font-medium pt-3 border-t border-slate-50">
+                  <p className="text-[11px] text-slate-500 leading-relaxed font-bold pt-4 border-t border-white/5">
                      {autoMode ?
                         "Engine is actively balancing Gate A/C traffic via dynamic LED routing." :
                         "Manual operator mode enabled. System providing recommendation only."}
@@ -143,28 +134,28 @@ export const CrowdIntelligence: React.FC = () => {
                animate={{ opacity: 1, x: 0, transition: { delay: 0.1 } }}
                className="space-y-4"
             >
-               <h4 className="text-slate-400 font-black uppercase text-[10px] tracking-widest">VENUE LIVENESS</h4>
-               <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-4 opacity-[0.03] pointer-events-none group-hover:scale-125 transition-transform duration-1000">
-                     <MapPin size={80} className="text-indigo-600" />
+               <h4 className="text-slate-500 font-black uppercase text-[10px] tracking-widest">VENUE LIVENESS</h4>
+               <div className="p-6 bg-[#05070a]/50 backdrop-blur-md rounded-3xl border border-white/5 relative overflow-hidden group">
+                  <div className="absolute -top-4 -right-4 p-4 opacity-[0.05] pointer-events-none group-hover:scale-125 transition-transform duration-1000">
+                     <MapPin size={100} className="text-indigo-500" />
                   </div>
                   <div className="space-y-6 relative z-10">
                      <div>
                         <div className="flex justify-between text-[10px] font-black uppercase mb-2">
-                           <span className="text-slate-400 tracking-wider">Audio Amplitude</span>
-                           <span className="text-indigo-600">108.4 dB</span>
+                           <span className="text-slate-500 tracking-wider">Audio Amplitude</span>
+                           <span className="text-indigo-400">108.4 dB</span>
                         </div>
-                        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                           <motion.div animate={{ width: ['70%', '95%', '85%'] }} transition={{ duration: 2, repeat: Infinity }} className="h-full bg-indigo-500" />
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                           <motion.div animate={{ width: ['70%', '95%', '85%'] }} transition={{ duration: 2, repeat: Infinity }} className="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
                         </div>
                      </div>
                      <div>
                         <div className="flex justify-between text-[10px] font-black uppercase mb-2">
-                           <span className="text-slate-400 tracking-wider">Wi-Fi Congestion</span>
-                           <span className="text-slate-900">82% Payload</span>
+                           <span className="text-slate-500 tracking-wider">Wi-Fi Congestion</span>
+                           <span className="text-white">82%</span>
                         </div>
-                        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                           <motion.div animate={{ width: '82%' }} className="h-full bg-slate-400" />
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                           <motion.div animate={{ width: '82%' }} className="h-full bg-slate-500" />
                         </div>
                      </div>
                   </div>
