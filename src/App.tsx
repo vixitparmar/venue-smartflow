@@ -7,10 +7,14 @@ import { Navigation } from './components/Navigation';
 import { Vendors } from './components/Vendors';
 import { Facilities } from './components/Facilities';
 import { ControlRoom } from './components/ControlRoom';
+import { CrowdIntelligence } from './components/CrowdIntelligence';
+import { Stadium3D } from './components/Stadium3D';
+import { AnalyticsPanels } from './components/AnalyticsPanels';
 import { twMerge } from 'tailwind-merge';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
-  const { startSimulation, stopSimulation, activeTab, surgeProtocolActive } = useStore();
+  const { startSimulation, stopSimulation, activeTab, isSidebarOpen, toggleSidebar } = useStore();
 
   useEffect(() => {
     startSimulation();
@@ -20,39 +24,50 @@ function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard': return <Dashboard />;
-      case 'navigation': return <Navigation />;
-      case 'food': return <Vendors />;
+      case 'intelligence': return <Dashboard />;
+      case 'topology': return <Stadium3D />;
+      case 'density': return <CrowdIntelligence />;
+      case 'routing': return <Navigation />;
+      case 'surge': return <ControlRoom />;
+      case 'vendors': return <Vendors />;
+      case 'analytics': return <AnalyticsPanels />;
       case 'facilities': return <Facilities />;
-      case 'admin': return <ControlRoom />;
       default: return <Dashboard />;
     }
   };
 
   return (
-    <div className="flex h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] overflow-hidden font-sans relative selection:bg-indigo-100 selection:text-indigo-900">
-      
-      {/* App Layout */}
+    <div className="flex h-screen bg-[#020617] text-slate-100 overflow-hidden font-sans relative">
+      {/* Background Glow */}
+      <div className="absolute top-0 left-1/4 w-[50%] h-[50%] bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* Mobile Sidebar Backdrop */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={toggleSidebar}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       <div className="relative z-10 flex w-full h-full">
         <Sidebar />
-        <main className="flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-300">
+        
+        <main className={twMerge(
+          "flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-500 ease-in-out",
+          isSidebarOpen ? "md:ml-[280px]" : "md:ml-[80px]"
+        )}>
           <Topbar />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden relative scroll-smooth customized-scrollbar bg-[var(--color-background)]">
-            {renderContent()}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden relative customized-scrollbar p-4 md:p-6 lg:p-8">
+            <div className="max-w-[1600px] mx-auto w-full">
+              {renderContent()}
+            </div>
           </div>
         </main>
-      </div>
-
-      {/* Mobile Bottom Navigation (Mock) */}
-      <div className="md:hidden fixed bottom-6 left-6 right-6 bg-white/80 backdrop-blur-xl border border-slate-200 p-2 z-50 flex justify-around items-center rounded-3xl shadow-xl">
-         {['dashboard', 'navigation', 'food', 'facilities', 'admin'].map(tab => (
-           <button 
-             key={tab}
-             onClick={() => useStore.setState({ activeTab: tab })}
-             className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${activeTab === tab ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-110' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'}`}
-           >
-             {tab.charAt(0).toUpperCase()}
-           </button>
-         ))}
       </div>
     </div>
   );
